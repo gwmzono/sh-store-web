@@ -1,28 +1,38 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <z-header></z-header>
+    <z-content></z-content>
+    <z-footer></z-footer>
+    <z-toolbar></z-toolbar>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'app',
-  components: {
-    HelloWorld
+  import zHeader from './components/zHeader';
+  import zContent from './components/zContent';
+  import zFooter from './components/zFooter';
+  import zToolbar from './components/zToolbar';
+  
+  export default {
+    name: 'app',
+    data(){
+      return {
+      }
+    },
+    components:{
+      zContent,
+      zHeader,
+      zFooter,
+      zToolbar,
+    },
+    computed:{
+    },
+    methods: {
+    },
+    created(){
+    },
   }
-}
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>

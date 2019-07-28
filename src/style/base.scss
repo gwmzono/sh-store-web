@@ -1,0 +1,39 @@
+@import 'var.scss';
+
+//reset
+*{
+  box-sizing: border-box;
+}
+body{
+  color: $base-font-color;
+}
+.fl{
+  float: left;
+  display: block;
+}
+.fr{
+  float: right;
+  display: block;
+}
+//用于完全包裹浮动元素
+.true-wrap{
+  &:before, &:after{
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+// 子元素inline-block, 没有间距
+.inline-place{
+  font-size: 0;
+  -webkit-text-size-adjust:none;
+  &>*{
+    display: inline-block;
+    font-size: 1rem;
+  }
+}
+.wrap{
+  width: $wrap-width;
+  min-width: $wrap-width;
+  margin: 0 auto;
+}
