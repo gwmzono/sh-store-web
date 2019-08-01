@@ -2,10 +2,11 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import common from './modules/pickSchool.js';
+import pickSchool from './modules/pickSchool.js';
+import sign from './modules/sign.js';
 
 const store = new Vuex.Store({
-  modules: {common},
+  modules: {pickSchool, sign}
 });
 
 export default store;

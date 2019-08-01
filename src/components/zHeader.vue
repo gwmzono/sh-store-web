@@ -6,7 +6,7 @@
       </div>
       <!-- logo END -->
       <z-school-picker></z-school-picker>
-      <z-login></z-login>
+      <z-sign></z-sign>
     </div>
     <!-- wrap END -->
   </div>
@@ -14,7 +14,7 @@
 
 <script>
   import zSchoolPicker from './zHeader/zSchoolPicker.vue';
-  import zLogin from './zHeader/zLogin.vue';
+  import zSign from './zHeader/zSign.vue';
   
   export default {
     name: 'zHeader',
@@ -23,7 +23,7 @@
     },
     components:{
       zSchoolPicker,
-      zLogin,
+      zSign,
     }
   }
 </script>

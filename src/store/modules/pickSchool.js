@@ -1,10 +1,12 @@
 import api from 'API/index.js';
+import {error} from 'UTIL/handler.js';
 
 const state = {
   currentSchool: '苏州大学',
   cityList : [],
   schoolList : [],
 };
+
 const getters = {
   currentSchool(state){
     return state.currentSchool;
@@ -16,6 +18,7 @@ const getters = {
     return state.schoolList;
   },
 };
+
 const mutations = {
   changeCityList(state, payload){
     state.cityList = payload;
@@ -30,36 +33,32 @@ const mutations = {
     state.currentSchool = payload;
   }
 };
+
 const actions = {
   //获取城市
   getCity({commit}, payload){
-    return api.getCity(payload)
-              .then((data) => {
-                commit('changeCityList', data);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+    return api.getCity(payload).then((data) => {
+      commit('changeCityList', data);
+    }).catch(msg=>{
+      error(msg);
+    });
   },
   //获取学校
   getSchool({commit}, payload){
-    return api.getSchool(payload)
-              .then((data) => {
-                commit('changeSchoolList', data);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+    return api.getSchool(payload).then((data) => {
+      commit('changeSchoolList', data);
+    }).catch(msg=>{
+      error(msg);
+    });
   },
   //搜索学校
   searchSchool({commit}, payload){
-    return api.searchSchool(payload)
-              .then((data) => {
-                commit('changeSchoolList', data);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+    return api.searchSchool(payload).then((data) => {
+      commit('changeSchoolList', data);
+    }).catch(msg=>{
+      error(msg);
+    });
   },
 };
+
 export default {state, getters, mutations, actions};

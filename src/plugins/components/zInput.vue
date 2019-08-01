@@ -1,7 +1,7 @@
 <template>
   <input
   :type="type"  :value="value"  :disabled="disabled" :class="classObj"
-  @input="$emit('input', $event.target.value)" :autocomplete="autocomplete"
+  @input="$emit('input', value)" :autocomplete="autocomplete"
   @keyup.enter="$emit('z-keyup', value)">
 </template>
 

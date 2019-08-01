@@ -4,28 +4,28 @@
     <div class="select-city" @mouseenter="openPanel" 
     @mouseleave="closePanel">
       <span>{{currentSchool}} </span>
-      <i class="el-icon-arrow-down"></i>
+      <Icon type="ios-arrow-down" size="20"/>
     </div>
     <!-- header-popup -->
     <div v-show="showPanel" class="header-popup"
     @mouseenter="openPanel" @mouseleave="closePanel">
-      <!-- search school -->
+      <!-- 搜索学校 -->
       <p>选择城市: <z-input type="text" placeholder="搜索学校..."
         v-model.trim="schoolName" :maxlength="15"
         @z-keyup="searchSchoolByName(schoolName)"></z-input></p>
-      <el-divider></el-divider>
+      <divider></divider>
       <!-- 字母列表区 -->
       <div class="inline-place">
         <span v-for="val in letter" @click="selectLetter(val,$event)"
         :key="val">{{val}}</span>
       </div>
-      <el-divider></el-divider>
+      <divider></divider>
       <!-- 城市列表区 -->
       <div v-show="cityList.length" class="inline-place">
         <span v-for="city in cityList" @click="selectCity(city.name,$event)" 
         :key="city.id">{{city.name}}</span>
       </div>
-      <el-divider></el-divider>
+      <divider></divider>
       <!-- 学校列表区 -->
       <div  v-show="schoolList.length" class="inline-place">
         <span v-for="school in schoolList"
@@ -146,7 +146,7 @@
           border: 1px solid $primary-color;
         }
       }
-      .el-divider{
+      .ivu-divider{
         &:nth-of-type(1){
           margin: 20px 0;
         }

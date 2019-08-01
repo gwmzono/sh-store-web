@@ -8,6 +8,7 @@ function resolve(dir){
 module.exports = {
   // publicPath: '/news/',
   //webpack配置
+  productionSourceMap: false,
   configureWebpack: {
     // externals: {
     //   'vue': 'Vue',
@@ -19,6 +20,7 @@ module.exports = {
         'STYLE': resolve('src/style'),
         'API': resolve('src/api'),
         'MODULE': resolve('node_modules'),
+        'UTIL': resolve('src/util'),
       }
     },
     devServer:{

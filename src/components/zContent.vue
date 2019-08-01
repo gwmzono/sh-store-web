@@ -1,6 +1,5 @@
 <template>
   <div id="content">
-    
   </div>
 </template>
 
@@ -9,6 +8,8 @@
     name: 'zContent',
     data(){
       return {}
+    },
+    methods:{
     },
   }
 </script>
