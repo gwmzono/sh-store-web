@@ -13,15 +13,23 @@ const getters = {
   },
   userInfo(state){
     return state.userInfo;
-  }
+  },
 };
 
 const mutations = {
   changeLoginStatus(state){
     let token = ls.get('x-token');
     if(token){
-      state.userInfo = JSON.parse(atob(token.split('.')[1]));
-      state.loginStatus = true;
+      let time = (new Date()).getTime()/1000;
+      let info = JSON.parse(atob(token.split('.')[1]));
+      if(time > info.expire_at){
+        ls.delete('x-token');
+        state.loginStatus = false;
+        state.userInfo = {};
+      }else{
+        state.userInfo = info;
+        state.loginStatus = true;
+      }
     }else{
       state.loginStatus = false;
       state.userInfo = {};

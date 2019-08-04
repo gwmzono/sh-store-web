@@ -5,7 +5,7 @@ import router from 'SRC/router/index';
 import store from 'SRC/store/index';
 // import ElementUi from 'element-ui';
 import iView from 'iview';
-import zPlug from './plugins/index.js';   //自定义插件
+import zCommon from './common/index.js';   //自定义内容
 // const Vue = require('vue');
 // const App = require('./App.vue');
 // const router = require('./router/index.js');
@@ -13,7 +13,7 @@ import zPlug from './plugins/index.js';   //自定义插件
 // const ElementUi = require('element-ui');
 
 Vue.use(iView,{size: 'large'});
-Vue.use(zPlug);
+Vue.use(zCommon);
 
 Vue.config.productionTip = false;
 

@@ -1,8 +1,8 @@
 <template>
   <div class="sign fr">
     <template v-if="!loginStatus">
-      <i-button @click="regM=true">注册</i-button>
-      <i-button type="primary" @click="loginM=true">登录</i-button>
+      <i-button @click="regModal=true">注册</i-button>
+      <i-button type="primary" @click="loginModal=true">登录</i-button>
     </template>
     <template v-if="loginStatus">
       <dropdown @on-click="userMenuSelect" placement="bottom-end">
@@ -17,13 +17,20 @@
       </dropdown>
     </template>
     <!-- 注册 -->
-    <modal v-model="regM" class="register">
+    <modal v-model="regModal" class="register">
       <div slot="header">注册</div>
       <i-form :model="regData" label-position="top" :rules="regRules"
               ref="regForm">
+        <form-item label="所在学校:" prop="school">
+          <i-select v-model="regData.school" filterable remote
+          :remote-method="searchSchool" :loading="loading">
+            <i-option v-for="option in schoolList" :key="option.id"
+            :value="option.name">{{option.name}}</i-option>
+          </i-select>
+        </form-item>
         <form-item label="手机号码:" prop="phone">
           <i-input type="text" v-model="regData.phone" 
-          placeholder="手机号" @on-enter="handleRegSubmit('regForm')"></i-input>
+          placeholder="手机号"></i-input>
         </form-item>
         <form-item label="密码:" prop="password">
           <i-input type="password" v-model="regData.password"
@@ -40,14 +47,14 @@
         </form-item>
         <form-item>
           <i-button type="primary" @click="handleRegSubmit('regForm')">注册</i-button>
-          <i-button @click="regM = false;">取消</i-button>
+          <i-button @click="regModal = false;">取消</i-button>
         </form-item>
       </i-form>
       <div slot="footer" style="display: none;"></div>
     </modal>
     <!-- 注册 END -->
     <!-- 登录 -->
-    <modal v-model="loginM" class="login">
+    <modal v-model="loginModal" class="login">
       <div slot="header">登录</div>
       <div slot="footer" style="display: none;"></div>
       <i-form :model="loginData" label-position="top" :rules="loginRules"
@@ -62,7 +69,10 @@
         </form-item>
         <form-item>
           <i-button type="primary" @click="handleLoginSubmit('loginForm')">登录</i-button>
-          <i-button @click="loginM = false;">取消</i-button>
+          <i-button @click="loginModal=false;">取消</i-button>
+          <a href="javascript:;"
+            @click="loginModal=false; regModal=true;"
+            style="float: right;">注册>></a>
         </form-item>
       </i-form>
     </modal>
@@ -71,6 +81,7 @@
 </template>
 
 <script>
+  import api from 'API/index.js';
   import {checkExist, register} from 'API/index.js';
   import {mapGetters, mapActions, mapMutations} from 'vuex';
   import ls from 'API/storage.js';
@@ -108,14 +119,21 @@
       
       return {
         //注册 data
-        regM: false,
+        regModal: false,
         regData:{
+          school:'',
           phone:'',
           password:'',
           repassword: '',
           nickname:'',
         },
+        loading: false,
+        schoolList:[],
         regRules: {
+          school:[
+            {required:true, message:'必须填写', trigger:'blur'},
+            {type:"string", min:2, max:20, message:'2-20个汉字', trigger:"blur"}
+          ],
           phone:[
             {required: true, message:'手机号必须', trigger:'blur'},
             {type:'string', pattern:/^1[3-9]\d{9}$/, message: '手机号格式错误', trigger: 'blur'},
@@ -136,7 +154,7 @@
         },
         
         //登录 data
-        loginM: false,
+        loginModal: false,
         loginData: {
           phone: '',
           password: '',
@@ -159,6 +177,20 @@
     methods: {
       ...mapMutations(['changeLoginStatus']),
       ...mapActions(['login']),
+      // 搜索学校
+      searchSchool(query){
+        let flag = query.search(/^[\u4e00-\u9fa5 ]{2,20}$/);
+        if(flag !== -1){
+          api.searchSchool(query).then(data=>{
+            this.schoolList = data;
+          }).catch(err=>{
+            this.$Message.error(err);
+          });
+        }else{
+          this.$Message.destroy();
+          this.$Message.error('学校名称必须是汉字');
+        }
+      },
       //注册 方法
       handleRegSubmit(ref){
         this.$refs[ref].validate((valid) => {
@@ -173,7 +205,7 @@
                 this.$Message.error(data.err);
               }else{
                 this.$Message.success('注册成功');
-                this.regM = false;
+                this.regModal = false;
               }
             }).catch(err => {
               this.$Message.destroy();
@@ -195,6 +227,7 @@
           }
         })
       },
+      //用户管理
       userMenuSelect(name){
         switch(name){
           case 'console':
@@ -210,11 +243,11 @@
     watch:{
       loginStatus(newStatus){
         if(newStatus === true){
-          this.loginM = false;
+          this.loginModal=false;
         }else{
-          this.loginM = true;
+          this.loginModal=true;
         }
-      }
+      },
     },
     created(){
       this.changeLoginStatus();
@@ -247,6 +280,9 @@
         text-align: center;
         .ivu-btn:first-of-type{
           margin-right: 60px;
+        }
+        .ivu-select-input{
+          cursor: text;
         }
       }
       .ivu-form-item-label{

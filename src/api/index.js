@@ -60,3 +60,11 @@ export function register(payload){
 export function checkExist(payload){
   return axiosGet('validate', payload);
 }
+//删除上传图片
+export function deleteUp(payload){
+  return axiosGet('deleteUp', payload);
+}
+//发布物品
+export function publish(payload){
+  return axios.post('publish', payload);
+}

@@ -1,10 +1,15 @@
 import Vue from 'vue';
-// const Vue = require('vue');
-// const VueRouter = require('vue-router');
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
+import zIndex from 'COMPONENT/zIndex';
+import zSearch from 'COMPONENT/zSearch';
+import zPublish from 'COMPONENT/zPublish';
+
 const routes = [
+  {path:'/', name:'index', component: zIndex},
+  {path:'/search', name:'search', component: zSearch},
+  {path:'/publish', name:'publish', component:zPublish}
 ];
 
 const router = new VueRouter({

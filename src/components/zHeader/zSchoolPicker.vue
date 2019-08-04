@@ -105,7 +105,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '~STYLE/var.scss';
   .school-picker{
     position: relative;

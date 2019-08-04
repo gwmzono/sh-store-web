@@ -19,7 +19,7 @@ module.exports = {
         'SRC': resolve('src'),
         'STYLE': resolve('src/style'),
         'API': resolve('src/api'),
-        'MODULE': resolve('node_modules'),
+        'COMPONENT': resolve('src/components'),
         'UTIL': resolve('src/util'),
       }
     },
