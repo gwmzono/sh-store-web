@@ -2,11 +2,11 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
-import pickSchool from './modules/pickSchool.js';
+import school from './modules/school.js';
 import sign from './modules/sign.js';
 
 const store = new Vuex.Store({
-  modules: {pickSchool, sign}
+  modules: {school, sign}
 });
 
 export default store;

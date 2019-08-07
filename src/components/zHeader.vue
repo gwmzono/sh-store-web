@@ -31,6 +31,7 @@
 <style lang="scss">
 @import '~STYLE/var.scss';
   #header{
+    min-width: $wrap-width;
     margin-bottom: 24px;
     @extend %shadow;
     .logo{

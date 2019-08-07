@@ -1,19 +1,17 @@
 <template>
   <div id="index">
-    <index-header></index-header>
+    <index-top></index-top>
     <index-content></index-content>
-    <index-footer></index-footer>
   </div>
 </template>
 
 <script>
-  import indexHeader from './zIndex/indexHeader.vue';
+  import indexTop from './zIndex/indexTop.vue';
   import indexContent from './zIndex/indexContent.vue';
-  import indexFooter from './zIndex/indexFooter.vue';
   
   export default {
     name: 'zContent',
-    components:{indexHeader, indexContent, indexFooter},
+    components:{indexTop, indexContent},
     data(){
       return {}
     },

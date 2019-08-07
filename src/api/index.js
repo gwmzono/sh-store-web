@@ -68,3 +68,15 @@ export function deleteUp(payload){
 export function publish(payload){
   return axios.post('publish', payload);
 }
+//搜索物品
+export function search(payload){
+  return axiosGet('search', payload);
+}
+//搜索分类
+export function category(payload){
+  return axiosGet('category', payload);
+}
+//点击商品
+export function detail(payload){
+  return axiosGet('item', payload);
+}

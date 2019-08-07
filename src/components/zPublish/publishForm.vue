@@ -3,7 +3,7 @@
     :rules="validateForm" ref="publishItemForm">
     <form-item prop="title" label="商品名称:">
       <i-input type="text" v-model="publishForm.title" autofocus
-      style="width:500px;" :maxlength="30"></i-input>
+      style="width:500px;" :maxlength="30" placeholder="搜索的依据, 尽量全面一点"></i-input>
       <span style="margin-left:10px;color:#c6c6c6">输入4-30个字</span>
     </form-item>
     <form-item prop="desc" label="商品描述:">
@@ -68,7 +68,8 @@
       }
       
       return {
-        publishForm:{
+        itemInfo: {},
+        publishForm: {
           title:'',
           desc:'',
           cate:'',
@@ -89,8 +90,8 @@
             {required: true, message:'必须选择一个分类', trigger:"blur"},
           ],
           price:[
-            {type:'number',required:true, message:'物品价格必填', trigger:'blur'},
-            {type:'number', min:0, max:9999.99, message:'价格填写不规范', trigger:"blur"},
+            {type:'number',required:true, message:'必需填写数字', trigger:'blur'},
+            {type:'number', min:0, max:9999.99, message:'价格超出范围', trigger:"blur"},
           ],
           oldPrice:[
             {validator: checkOldprice, trigger:'blur'},
@@ -132,8 +133,11 @@
             //发送请求
             publish(this.publishForm).then(data => {
               this.$Message.destroy();
-              this.$Message.success('提交成功');
-              console.log(data);
+              this.itemInfo = data;
+              this.$Message.success('正在跳转商品详情页...');
+              setTimeout(function(){
+                this.$router.replace({path: `/item/${this.itemInfo.id}`});
+              }.bind(this), 1500);
             }).catch(err => {
               this.$Message.destroy();
               this.$Message.error(err);

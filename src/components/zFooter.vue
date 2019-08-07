@@ -21,6 +21,9 @@
       text-align: center;
       font-size: 14px;
       color: #a6a6a6;
+      &:last-of-type{
+        margin-bottom: 24px;
+      }
     }
   }
 </style>

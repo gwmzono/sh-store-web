@@ -27,6 +27,7 @@
         :on-success="handleSuccess" 
         :on-format-error="handleFormatError"
         :on-exceeded-size="handleMaxSize"
+        :before-upload="handleBeforeUpload"
         >
         <div class="up-plus">
           <Icon type="ios-add" size="80" style="color: #c6c6c6;"/>
@@ -43,6 +44,7 @@
 <script>
   import {deleteUp} from 'API/index.js';
   import ls from 'API/storage.js';
+  import {mapMutations, mapGetters} from 'vuex';
   
   export default {
     name: 'publishForm',
@@ -59,15 +61,25 @@
         uploadList: [],
       }
     },
-    computed: {},
+    computed: {
+      ...mapGetters(['loginStatus']),
+    },
     methods: {
+      ...mapMutations(['changeLoginStatus']),
+      handleBeforeUpload(){
+        this.changeLoginStatus();
+        if(!this.loginStatus){
+          this.$Message.error('请先登录');
+          return false;
+        }
+      },
       handleView (name) {
         this.imgName = name;
         this.visible = true;
       },
       handleRemove (index) {
         //服务器图片基础地址
-        const root = 'c:/wamp/www/store.zono.com/uploads/';
+        const root = '/data/www/store.zono.com/uploads/';
         const item = this.uploadList[index];
         let filePath = root + item.response.path;
         deleteUp({file: filePath}).then(()=>{

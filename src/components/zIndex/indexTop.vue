@@ -1,18 +1,20 @@
 <template>
-  <div class="wrap true-wrap">
-    <!--  -->
+  <div class="wrap true-wrap top">
+    <!-- 搜索 -->
     <div class="search">
-      <i-input type="text" v-model="searchText" placeholder="搜索..."
+      <i-input type="text" v-model="searchText"
+      placeholder="用空格分隔来分词搜索"
       search @on-search="searchItem"></i-input>
     </div>
-    <!--  -->
+    <!-- 搜索 END -->
+    <!-- 发布按钮 -->
     <div class="publish">
       <i-button class="fr" @click="publishItem">
         <Icon type="md-add-circle" size="24" color="#57a3f3"/>
         发布闲置
       </i-button>
     </div>
-    <!--  -->
+    <!-- 发布按钮 END -->
   </div>
 </template>
 
@@ -20,7 +22,7 @@
   import {mapGetters, mapMutations} from 'vuex';
   
   export default {
-    name: 'indexHeader',
+    name: 'indexTop',
     components: {},
     props:{},
     data() {
@@ -29,12 +31,15 @@
       }
     },
     computed: {
-      ...mapGetters(['loginStatus']),
+      ...mapGetters(['loginStatus','currentSchool']),
     },
     methods: {
       ...mapMutations(['changeLoginStatus']),
       searchItem(){
-        this.$router.push({name: 'search', query:{value: this.searchText}});
+        this.$router.push({
+          name: 'search',
+          query:{school: this.currentSchool, keyword: this.searchText}
+        });
       },
       publishItem(){
         this.changeLoginStatus();
@@ -42,7 +47,7 @@
           this.$Message.destroy();
           this.$Message.error('请先登录');
         }else{
-          window.open('http://' + location.host + '/publish');
+          window.open(this.protocol + location.host + '/publish');
         }
       }
     },
@@ -54,9 +59,10 @@
 <style lang="scss">
   @import '~STYLE/var.scss';
   #index{
-    .wrap{
+    .top{
       @extend %shadow;
       padding: 20px 100px;
+      margin-bottom: 24px;
       .search{
         float: left;
         width: 40%;
