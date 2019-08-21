@@ -8,6 +8,9 @@ import zIndex from 'COMPONENT/zIndex';
 import zSearch from 'COMPONENT/zSearch';
 import zPublish from 'COMPONENT/zPublish';
 import zDetail from 'COMPONENT/zDetail';
+import zDialogue from 'COMPONENT/zDialogue';
+import zConsole from 'COMPONENT/zConsole';
+import notFound from 'COMPONENT/404.vue';
 
 const routes = [
   {path:'/', name:'index', component: zIndex},
@@ -18,6 +21,14 @@ const routes = [
   
   {path:'/publish', name:'publish', component:zPublish,
   meta:{requireLogin: true}},
+  
+  {path:'/dialogue', name:'dialogue', component:zDialogue,
+  meta:{requireLogin: true}},
+  
+  {path:'/console', name:'console', component: zConsole,
+  meta:{requireLogin: true}},
+  
+  {path:'/404', name:'404', component:notFound,},
   
   {path:'*', name: 'none', component: zIndex},
 ];

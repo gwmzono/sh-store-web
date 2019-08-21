@@ -1,9 +1,5 @@
 <template>
   <div class="sign fr">
-    <template v-if="!loginStatus">
-      <i-button @click="regModal=true">注册</i-button>
-      <i-button type="primary" @click="loginModal=true">登录</i-button>
-    </template>
     <template v-if="loginStatus">
       <dropdown @on-click="userMenuSelect" placement="bottom-end">
         <a href="javascript:;">
@@ -12,9 +8,14 @@
         </a>
         <dropdown-menu slot="list">
           <dropdown-item name="console">个人中心</dropdown-item>
-          <dropdown-item name="exit">退出</dropdown-item>
+          <dropdown-item name="message">我的消息</dropdown-item>
+          <dropdown-item name="exit" divided>退出</dropdown-item>
         </dropdown-menu>
       </dropdown>
+    </template>
+    <template v-else>
+      <i-button @click="regModal=true">注册</i-button>
+      <i-button type="primary" @click="loginModal=true">登录</i-button>
     </template>
     <!-- 注册 -->
     <modal v-model="regModal" class="register">
@@ -231,6 +232,10 @@
       userMenuSelect(name){
         switch(name){
           case 'console':
+            window.open(`${this.protocol}${location.host}/console`);
+            break;
+          case 'message':
+            window.open(`${this.protocol}${location.host}/dialogue`);
             break;
           case 'exit':
             ls.delete('x-token');

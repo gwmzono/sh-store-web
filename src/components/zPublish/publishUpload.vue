@@ -18,6 +18,7 @@
     <!-- 新增区 -->
     <template v-if="uploadList.length<5">
       <upload
+        ref="upload"
         :action="upUrl"
         name="image"
         multiple
@@ -28,6 +29,7 @@
         :on-format-error="handleFormatError"
         :on-exceeded-size="handleMaxSize"
         :before-upload="handleBeforeUpload"
+        :default-file-list="originImgList"
         >
         <div class="up-plus">
           <Icon type="ios-add" size="80" style="color: #c6c6c6;"/>
@@ -35,7 +37,7 @@
       </upload>
     </template>
     <!-- 预览图 -->
-    <Modal title="图片预览" v-model="visible">
+    <Modal title="图片预览" v-model="visible" :footer-hide="true">
       <img :src="baseUrl + imgName" v-if="visible" style="width: 100%">
     </Modal>
   </div>
@@ -47,7 +49,7 @@
   import {mapMutations, mapGetters} from 'vuex';
   
   export default {
-    name: 'publishForm',
+    name: 'publishUpload',
     components: {},
     props:{},
     data() {
@@ -59,6 +61,7 @@
         imgName: '',
         visible: false,
         uploadList: [],
+        originImgList: [],
       }
     },
     computed: {
@@ -79,9 +82,8 @@
       },
       handleRemove (index) {
         //服务器图片基础地址
-        const root = '/data/www/store.zono.com/uploads/';
         const item = this.uploadList[index];
-        let filePath = root + item.response.path;
+        let filePath = item.response.path;
         deleteUp({file: filePath}).then(()=>{
           this.uploadList.splice(index, 1);
           ls.set('upload-cache',JSON.stringify(this.uploadList));
@@ -107,12 +109,14 @@
       },
     },
     created(){
-      let upCache = ls.get('upload-cache')
+      let upCache = ls.get('upload-cache');
       if(upCache){
-        this.uploadList = JSON.parse(upCache);
+        this.originImgList = JSON.parse(upCache);
+        this.uploadList = this.originImgList;
       }
     },
-    updated(){},
+    updated(){
+    }
   }
 </script>
 

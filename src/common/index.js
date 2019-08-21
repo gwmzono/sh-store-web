@@ -9,9 +9,12 @@ export default {
     for (let c of components){
       Vue.component(c.name, c);
     }
-    const PROTOCOL = 'http://'
+    const PROTOCOL = 'http://';
+    const SERVER = 'store.zono.com/';
     Vue.prototype.protocol = PROTOCOL;
-    Vue.prototype.failedImg = PROTOCOL + 'store.zono.com/assets/default_pic.png';
-    Vue.prototype.imgRoot = PROTOCOL + 'store.zono.com/uploads/';
+    Vue.prototype.serverRoot = SERVER;
+    Vue.prototype.noneImg = PROTOCOL + SERVER + 'assets/none_img.png';
+    Vue.prototype.logoImg = PROTOCOL + SERVER + 'assets/logo.png';
+    Vue.prototype.imgRoot = PROTOCOL + SERVER + 'uploads/';
   }
 }

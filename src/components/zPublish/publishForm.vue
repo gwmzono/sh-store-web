@@ -2,7 +2,7 @@
   <i-form label-position="left" :label-width="100" :model="publishForm"
     :rules="validateForm" ref="publishItemForm">
     <form-item prop="title" label="商品名称:">
-      <i-input type="text" v-model="publishForm.title" autofocus
+      <i-input type="text" v-model="publishForm.title"
       style="width:500px;" :maxlength="30" placeholder="搜索的依据, 尽量全面一点"></i-input>
       <span style="margin-left:10px;color:#c6c6c6">输入4-30个字</span>
     </form-item>
@@ -41,7 +41,10 @@
     </row>
       
     <form-item>
-      <i-button type="primary" @click="publish">提交</i-button>
+      <i-button type="primary" @click="publish">
+        <template v-if="this.$route.query.item">完成</template>
+        <template v-else>提交</template>
+      </i-button>
     </form-item>
     
   </i-form>
@@ -50,7 +53,7 @@
 <script>
   import ls from 'API/storage.js';
   import {mapMutations, mapGetters} from 'vuex';
-  import {publish} from 'API/index.js';
+  import {publish, editItem} from 'API/index.js';
   
   export default {
     name: 'publishForm',
@@ -114,6 +117,7 @@
               return false;
             }
             ls.delete('publish-form');
+            window.onbeforeunload = undefined;
             this.$Message.loading({content:'提交中...', duration:0});
             //处理pic
             if(ls.get('upload-cache')){
@@ -131,17 +135,34 @@
             this.publishForm.user_id = this.userInfo.id;
             this.publishForm.school = this.userInfo.school;
             //发送请求
-            publish(this.publishForm).then(data => {
-              this.$Message.destroy();
-              this.itemInfo = data;
-              this.$Message.success('正在跳转商品详情页...');
-              setTimeout(function(){
-                this.$router.replace({path: `/item/${this.itemInfo.id}`});
-              }.bind(this), 1500);
-            }).catch(err => {
-              this.$Message.destroy();
-              this.$Message.error(err);
-            });
+            if(this.$route.query.item){
+              editItem({
+                ...this.publishForm,
+                id:this.$route.query.item,
+              }).then(data => {
+                this.$Message.destroy();
+                this.itemInfo = data;
+                this.$Message.success('正在跳转商品详情页...');
+                setTimeout(function(){
+                  this.$router.replace({path: `/item/${this.itemInfo.id}`});
+                }.bind(this), 1500);
+              }).catch(err => {
+                this.$Message.destroy();
+                this.$Message.error(err);
+              });
+            }else{
+              publish(this.publishForm).then(data => {
+                this.$Message.destroy();
+                this.itemInfo = data;
+                this.$Message.success('正在跳转商品详情页...');
+                setTimeout(function(){
+                  this.$router.replace({path: `/item/${this.itemInfo.id}`});
+                }.bind(this), 1500);
+              }).catch(err => {
+                this.$Message.destroy();
+                this.$Message.error(err);
+              });
+            }
           }else{
             this.$Message.error('表单填写错误');
           }
@@ -152,6 +173,22 @@
       //浏览器离开前储存表单
       window.onbeforeunload = function(){
         ls.set('publish-form',JSON.stringify(this.publishForm));
+        if(this.$route.query.item){
+          let pic = '';
+          if(ls.get('upload-cache')){
+            let picArr = JSON.parse(ls.get('upload-cache'));
+            let picStr = '';
+            for(let item of picArr){
+              picStr += item.response.path + ';';
+            }
+            pic = picStr;
+          }
+          editItem({
+            pic,cancel:true,id:this.$route.query.item
+          }).then(()=>{}).catch(()=>{});
+          ls.delete('upload-cache');
+          ls.delete('publish-form');
+        }
       }.bind(this)
       //恢复表单
       if(ls.get('publish-form')){

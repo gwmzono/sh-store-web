@@ -1,10 +1,11 @@
 import axios from 'axios';
 import ls from './storage.js';
+import store from 'STORE/index.js';
 
 axios.defaults.baseURL = 'http://api.store.zono.com';
 axios.defaults.timeout = 3000;
 
-function axiosGet(url, obj){
+function axiosGet(url, obj={}){
   return axios.get(url, {params: obj});
 }
 
@@ -29,6 +30,7 @@ axios.interceptors.response.use(res => {
 }, err => {
   if(err.response && err.response.status === 401){
     ls.delete('x-token');
+    store.commit('changeLoginStatus');
   }
   return Promise.reject(err.message);
 });
@@ -56,6 +58,10 @@ export default {
 export function register(payload){
   return axios.post('register', payload);
 }
+//修改密码
+export function changePassword(payload){
+  return axios.post('changePassword', payload);
+}
 //验证手机号或昵称是否存在
 export function checkExist(payload){
   return axiosGet('validate', payload);
@@ -68,6 +74,14 @@ export function deleteUp(payload){
 export function publish(payload){
   return axios.post('publish', payload);
 }
+//编辑物品
+export function editItem(payload){
+  return axiosGet('editItem', payload);
+}
+//删除物品
+export function deleteItem(payload){
+  return axiosGet('deleteItem', payload);
+}
 //搜索物品
 export function search(payload){
   return axiosGet('search', payload);
@@ -76,7 +90,27 @@ export function search(payload){
 export function category(payload){
   return axiosGet('category', payload);
 }
+//物品列表
+export function allItem(payload){
+  return axiosGet('allItem', payload);
+}
 //点击商品
 export function detail(payload){
   return axiosGet('item', payload);
+}
+//获取对话列表
+export function dialogue(payload){
+  return axiosGet('dialogue', payload);
+}
+//隐藏指定对话
+export function hideDialogue(payload){
+  return axiosGet('hideDialogue', payload);
+}
+//添加新消息
+export function sendMessage(payload){
+  return axios.post('sendMessage', payload);
+}
+//删除消息
+export function deleteMessage(payload){
+  return axiosGet('deleteMessage', payload);
 }

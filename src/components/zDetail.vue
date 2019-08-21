@@ -34,10 +34,10 @@
             <p>发 布 者 : {{itemInfo.nickname}}</p>
           </div>
           <div class="item-title-5">
-            <p>发 布 于 : <i-time :time="itemInfo.create_time" :interval="1" /></p>
+            <p v-if="itemInfo.create_time">发 布 于 : <i-time :time="itemInfo.create_time"/></p>
           </div>
           <div class="item-title-6">
-            <i-button type="primary">给 ta 留言</i-button>
+            <i-button type="primary" @click="sendMsg">给 ta 留言</i-button>
           </div>
         </div>
       </div>
@@ -59,8 +59,9 @@
 </template>
 
 <script>
-  import {detail} from 'API/index.js';
-  import ls from 'API/storage.js'
+  import {detail, sendMessage} from 'API/index.js';
+  import ls from 'API/storage.js';
+  import {mapGetters} from 'vuex';
   
   export default {
     name: 'zDetail',
@@ -71,9 +72,11 @@
         imgIndex: 0,
         itemId: this.$route.params.id,
         itemInfo: {},
+        inputMsg: '',
       }
     },
     computed: {
+      ...mapGetters(['userInfo']),
       imgList(){
         let list = [];
         if(!this.itemInfo.pic){
@@ -94,15 +97,54 @@
         return list;
       }
     },
-    methods: {},
+    methods: {
+      sendMsg(){
+        this.$Modal.confirm({
+          title: '请输入留言内容',
+          closable: true,
+          okText: '发送',
+          render: (h) => {
+            return h('i-input', {
+              props:{
+                value: this.inputMsg,
+                autofocus: true,
+                type: 'textarea',
+                autosize: {minRows:3},
+              },
+              on: {
+                input: (val) => {
+                  this.inputMsg = val;
+                }
+              },
+            })
+          },
+          onOk: () => {
+            let from = this.userInfo.id;
+            let to = this.itemInfo.user_id;
+            let item_id = this.itemId;
+            let message = this.inputMsg;
+            sendMessage({from, to, item_id, message}).then(() => {
+              this.$Message.success({
+                content: '留言成功, 可以在"我的消息"中查看详细内容',
+                duration: 10,
+                closable: true,
+              });
+              this.inputMsg = '';
+            }).catch(err => {
+              this.$Message.error(err);
+            });
+          }
+        });
+      },
+    },
     created(){
       this.$Spin.show();
       detail({id: this.itemId}).then(data=>{
         this.itemInfo = data;
         this.$Spin.hide();
-      }).catch(err => {
-        this.$Message.error(err);
+      }).catch(() => {
         this.$Spin.hide();
+        this.$router.replace({name: '404'});
       });
       if(ls.get('publish-form')){
         ls.delete('publish-form');
@@ -160,6 +202,9 @@
         }
         .item-title-4{
           margin-bottom: 24px;
+        }
+        .item-title-5{
+          margin-bottom: 48px;
         }
         .item-title-6{
           text-align: center;

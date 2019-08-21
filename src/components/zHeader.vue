@@ -1,7 +1,9 @@
 <template>
   <div id="header">
     <div class="wrap true-wrap">
-      <div class="logo fl">
+      <div class="logo fl"
+        :style="{backgroundImage: `url(${this.logoImg})`}"
+        @click="returnIndex">
         <h1>Idle 闲置物品站</h1>
       </div>
       <!-- logo END -->
@@ -25,6 +27,13 @@
       zSchoolPicker,
       zSign,
     },
+    methods:{
+      returnIndex(){
+        this.$router.push({name:'index'});
+      }
+    },
+    created(){
+    }
   }
 </script>
 
@@ -37,7 +46,9 @@
     .logo{
       height: $header-height;
       width: 160px;
-      background-color: #ccc;
+      background-position: center;
+      background-size: 100%;
+      cursor: pointer;
       h1{
         display: none;
       }

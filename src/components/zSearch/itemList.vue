@@ -44,7 +44,7 @@
             });
           }else{
             imgList.push({
-              backgroundImage: 'url(' + this.failedImg + ')'
+              backgroundImage: 'url(' + this.noneImg + ')'
             });
           }
         }
