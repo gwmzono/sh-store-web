@@ -59,6 +59,7 @@
 </template>
 
 <script>
+  //商品详情页
   import {detail, sendMessage} from 'API/index.js';
   import ls from 'API/storage.js';
   import {mapGetters} from 'vuex';
@@ -79,11 +80,16 @@
       ...mapGetters(['userInfo']),
       imgList(){
         let list = [];
-        if(!this.itemInfo.pic){
+        let tmp;
+        if(this.itemInfo.pic){
+          tmp = JSON.parse(this.itemInfo.pic);
+        }else{
+          return [];
+        }
+        if(tmp.length === 0){
+          list.push(this.noneImg);
           return list;
         }
-        let tmp = this.itemInfo.pic.split(';');
-        tmp.pop();
         for(let img of tmp){
           list.push(this.imgRoot + img);
         }
@@ -138,6 +144,7 @@
       },
     },
     created(){
+      //请求物品id
       this.$Spin.show();
       detail({id: this.itemId}).then(data=>{
         this.itemInfo = data;
@@ -146,6 +153,7 @@
         this.$Spin.hide();
         this.$router.replace({name: '404'});
       });
+      //删除之前遗留的表单
       if(ls.get('publish-form')){
         ls.delete('publish-form');
       }

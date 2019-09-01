@@ -55,9 +55,9 @@
     data() {
       return {
         //上传接口
-        upUrl: '//api.store.zono.com/upload',
+        upUrl: '//api.store.zono.pub/upload',
         //图片基础地址
-        baseUrl: '//store.zono.com/uploads/',
+        baseUrl: '//store.zono.pub/uploads/',
         imgName: '',
         visible: false,
         uploadList: [],
@@ -109,14 +109,22 @@
       },
     },
     created(){
-      let upCache = ls.get('upload-cache');
-      if(upCache){
-        this.originImgList = JSON.parse(upCache);
-        this.uploadList = this.originImgList;
+      //加载缓存函数
+      let loadCache = (name) => {
+        let upCache = ls.get(name);
+        if(upCache){
+          this.originImgList = JSON.parse(upCache);
+          this.uploadList = this.originImgList;
+        }
       }
+      //加载缓存
+      let th1 = setInterval(()=>{
+        if(ls.get('upload-cache')){
+          loadCache('upload-cache');
+          clearInterval(th1);
+        }
+      }, 10);
     },
-    updated(){
-    }
   }
 </script>
 

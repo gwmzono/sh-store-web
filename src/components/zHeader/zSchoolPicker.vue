@@ -120,7 +120,7 @@
     .header-popup{
       position: absolute;
       top: 60px;
-      z-index: 100;
+      z-index: 1000;
       background-color: #fff;
       box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
       padding:10px 20px;

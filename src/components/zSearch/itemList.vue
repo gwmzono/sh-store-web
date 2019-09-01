@@ -38,9 +38,9 @@
       picList(){
         let imgList = [];
         for(let item of this.itemList){
-          if(item.pic){
+          if(item.pic !== "[]"){
             imgList.push({
-              backgroundImage: 'url(' + this.imgRoot + item.pic.split(';')[0] + ')'
+              backgroundImage: 'url(' + this.imgRoot + JSON.parse(item.pic)[0] + ')'
             });
           }else{
             imgList.push({

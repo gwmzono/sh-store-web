@@ -44,8 +44,10 @@
           this.$Message.error(err);
         });
       },
+      
       editItem(id){
         detail({id}).then(data => {
+          //成功过标志
           let form = {
             cate: data.cate,
             title: data.title,
@@ -55,10 +57,11 @@
           };
           //处理pic
           let upload = [];
-          let tempArr = data.pic.split(';');
-          tempArr.pop();
+          let tempArr = JSON.parse(data.pic);
           for (let index in tempArr){
             upload[index] = {
+              status:'finished',
+              percentage:100,
               response:{
                 path: tempArr[index]
               }
@@ -69,9 +72,10 @@
           ls.set('publish-form', JSON.stringify(form));
         }).catch(err => {
           this.$Message.error(err);
-        })
+        });
         window.open(`${this.protocol}${location.host}/publish?item=${id}`);
       },
+        
       deleteItem(id,title){
         this.$Modal.error({
           title: `您确定要删除吗?`,

@@ -10,7 +10,7 @@ export default {
       Vue.component(c.name, c);
     }
     const PROTOCOL = 'http://';
-    const SERVER = 'store.zono.com/';
+    const SERVER = 'store.zono.pub/';
     Vue.prototype.protocol = PROTOCOL;
     Vue.prototype.serverRoot = SERVER;
     Vue.prototype.noneImg = PROTOCOL + SERVER + 'assets/none_img.png';

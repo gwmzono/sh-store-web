@@ -122,13 +122,13 @@
             //处理pic
             if(ls.get('upload-cache')){
               let picArr = JSON.parse(ls.get('upload-cache'));
-              let picStr = '';
+              let tempArr = [];
               for(let item of picArr){
-                picStr += item.response.path + ';';
+                tempArr.push(item.response.path);
               }
-              this.publishForm.pic = picStr;
+              this.publishForm.pic = JSON.stringify(tempArr);
             }else{
-              this.publishForm.pic = '';
+              this.publishForm.pic = "[]";
             }
             ls.delete('upload-cache');
             //处理school和user_id
@@ -174,14 +174,14 @@
       window.onbeforeunload = function(){
         ls.set('publish-form',JSON.stringify(this.publishForm));
         if(this.$route.query.item){
-          let pic = '';
+          let pic;
           if(ls.get('upload-cache')){
             let picArr = JSON.parse(ls.get('upload-cache'));
-            let picStr = '';
+            let tempArr = [];
             for(let item of picArr){
-              picStr += item.response.path + ';';
+              tempArr.push(item.response.path);
             }
-            pic = picStr;
+            pic = JSON.stringify(tempArr);
           }
           editItem({
             pic,cancel:true,id:this.$route.query.item
@@ -190,10 +190,19 @@
           ls.delete('publish-form');
         }
       }.bind(this)
-      //恢复表单
-      if(ls.get('publish-form')){
-        this.publishForm = JSON.parse(ls.get('publish-form'));
+      //加载缓存函数
+      let loadCache = (name) => {
+        let upCache = ls.get(name);
+        if(upCache){
+          this.publishForm = JSON.parse(upCache);
+        }
       }
+      let th2 = setInterval(()=>{
+        if(ls.get('publish-form')){
+          loadCache('publish-form');
+          clearInterval(th2);
+        }
+      }, 10);
     },
     updated(){
     },

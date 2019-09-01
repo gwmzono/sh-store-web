@@ -10,9 +10,10 @@ module.exports = {
   //webpack配置
   productionSourceMap: false,
   configureWebpack: {
-    // externals: {
-    //   'vue': 'Vue',
-    // },
+    externals: {
+      'vue': 'Vue',
+      'iview': 'iview',
+    },
     resolve: {
       extensions: ['.js', '.vue', '.json'],
       alias:{
