@@ -9,7 +9,7 @@ export default {
     for (let c of components){
       Vue.component(c.name, c);
     }
-    const PROTOCOL = 'http://';
+    const PROTOCOL = 'https://';
     const SERVER = 'store.zono.pub/';
     Vue.prototype.protocol = PROTOCOL;
     Vue.prototype.serverRoot = SERVER;

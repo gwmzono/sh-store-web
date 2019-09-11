@@ -2,7 +2,7 @@ import axios from 'axios';
 import ls from './storage.js';
 import store from 'STORE/index.js';
 
-axios.defaults.baseURL = 'http://api.store.zono.pub';
+axios.defaults.baseURL = 'https://api.store.zono.pub';
 axios.defaults.timeout = 3000;
 
 function axiosGet(url, obj={}){
