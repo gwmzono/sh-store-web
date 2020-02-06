@@ -10,16 +10,15 @@
       <tabs type="card" closable 
       :before-remove="beforeRemoveTab"
       :animated="false">
-        <tab-pane v-for="dialogue in distictItem"
-        :label="dialogue.nickname"
-        :key="dialogue.create_time"
+        <tab-pane v-for="dialogue in processedList"
+        :label="dialogue[0].nickname"
+        :key="dialogue[0].create_time"
+        closable
         >
-          <divider>{{dialogue.item_title}}</divider>
-          <div v-for="content in dialogueList"
+          <divider>{{dialogue[0].item_title}}</divider>
+          <div v-for="content in dialogue"
           :key="content.id" class="true-wrap">
-            <p v-if="dialogue.item_id === content.item_id"
-            :class="{sender:userInfo.id===content.from,receiver:userInfo.id!==content.from}"
-            >
+            <p :class="{sender:userInfo.id===content.from,receiver:userInfo.id!==content.from}">
               {{content.message}}
               <i @click="handleDelete(content.id)">撤回</i>
             </p>
@@ -58,23 +57,56 @@
     },
     computed: {
       ...mapGetters(['userInfo']),
-      distictItem(){
-        //返回列表中不同的item
-        let distictArr = [];
-        function isExist(val){
-          for(let item of distictArr){
-            if(item.item_id === val){
-              return true;
+      // distictItem(){
+      //   //返回列表中不同的item
+      //   let distictArr = [];
+      //   function isExist(val){
+      //     for(let item of distictArr){
+      //       if(item.item_id === val){
+      //         return true;
+      //       }
+      //     }
+      //     return false;
+      //   }
+      //   for(let i = 0; i < this.dialogueList.length; i++){
+      //     if(!isExist(this.dialogueList[i].item_id)){
+      //       distictArr.push(this.dialogueList[i]);
+      //     }
+      //   }
+      //   return distictArr;
+      // },
+      //将对话分类
+      processedList(){
+        let list = [];
+        if(this.dialogueList.length !== 0){
+          //为每一个对话添加标识码
+          let other;
+          for(let item of this.dialogueList){
+            if(this.userInfo.id === item.from){
+              other = item.to;
+            }else{
+              other = item.from;
+            }
+            item.code = `zy${item.item_id}${other}`;
+          }
+          //罗列出所有标识码
+          let temp = [];
+          for(let item of this.dialogueList){
+            if(temp.indexOf(item.code) === -1){
+              temp.push(item.code);
             }
           }
-          return false;
-        }
-        for(let i = 0; i < this.dialogueList.length; i++){
-          if(!isExist(this.dialogueList[i].item_id)){
-            distictArr.push(this.dialogueList[i]);
+          //根据标识码将对话分类
+          let index = 0;
+          for(let item of this.dialogueList){
+            index = temp.indexOf(item.code);
+            if(list[index] === undefined){
+              list[index] = [];
+            }
+            list[index].push(item);
           }
         }
-        return distictArr;
+        return list.reverse();
       }
     },
     methods: {
@@ -91,11 +123,13 @@
         this.$Modal.confirm({
           title: '您确定删除这条消息吗?',
           content: '删除后对方也将看不到!',
-          onOk: function(){
-            deleteMessage({id}).then(() => {
-              this.flushDialogue();
+          onOk: () => {
+            deleteMessage({id})
+            .then(() => {
               this.$Message.success('删除成功');
-            }).catch(err => {
+              this.flushDialogue();
+            })
+            .catch(err => {
               this.$Message.error(err);
             });
           },
@@ -104,13 +138,13 @@
       sendMsg(e,dialogue){
         let from = this.userInfo.id;
         let to = undefined;
-        if(dialogue.from !== from){
-          to = dialogue.from;
+        if(dialogue[0].from !== from){
+          to = dialogue[0].from;
         }else{
-          to = dialogue.to;
+          to = dialogue[0].to;
         }
         let message = this.msg;
-        let item_id = dialogue.item_id;
+        let item_id = dialogue[0].item_id;
         if(e.keyCode === 13 && e.ctrlKey){
           sendMessage({from, to, message, item_id}).then(() => {
             this.msg = '';
